@@ -1,8 +1,10 @@
 package com.juaracoding.pcmspringboot4.controller;
 
+import com.juaracoding.pcmspringboot4.config.SMTPConfig;
 import com.juaracoding.pcmspringboot4.coretan.ClassStudent;
 import com.juaracoding.pcmspringboot4.model.User;
 import com.juaracoding.pcmspringboot4.util.ClassIOC;
+import com.juaracoding.pcmspringboot4.util.GlobalFunction;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +32,10 @@ public class DefaultController {
     @GetMapping
     public String getData(){
 
-        try {
-            classIOC.syncData();
-        } catch (InterruptedException e) {
-            System.out.println("Error "+e.getMessage());
-        }
+        GlobalFunction.print("EMAIL USERNAME : "+ SMTPConfig.getEmailUsername());
+        GlobalFunction.print("EMAIL PASSWORD : "+ SMTPConfig.getEmailPassword());
+        GlobalFunction.print("EMAIL HOST : "+ SMTPConfig.getEmailHost());
+
         return classIOC.getData()+random.nextInt(100)+"---"+cumiGoreng;
     }
 
@@ -110,6 +111,7 @@ public class DefaultController {
     }
 
 
+    //localhost:8080/coba4/1/Paul
     @GetMapping("/coba4/{id}/{nama-lengkap}")
     public String getCoba4(
             @PathVariable Integer id,
@@ -120,6 +122,17 @@ public class DefaultController {
         System.out.println("Nama Lengkap : "+namaLengkap);
         return "roger that";
     }
+    //localhost:8080/coba4/paul@gmail.com/890712ji0oijahefoirhaorih
+//    @GetMapping("/coba4/{email}/{token}")
+//    public String getCoba41(
+//            @PathVariable Integer id,
+//            @PathVariable(value = "nama-lengkap") String namaLengkap
+//    ){
+//
+//        System.out.println("ID : "+id);
+//        System.out.println("Nama Lengkap : "+namaLengkap);
+//        return "roger that";
+//    }
 
     @GetMapping("/coba5")
     public String getCoba5(

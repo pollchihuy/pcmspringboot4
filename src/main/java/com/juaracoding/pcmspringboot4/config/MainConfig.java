@@ -7,7 +7,7 @@ import java.util.Random;
 
 
 @Configuration
-public class MainConfiguration {
+public class MainConfig {
 
     @Bean
     public Random getRandom(){
