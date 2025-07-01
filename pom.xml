@@ -15,11 +15,40 @@
 	<description>Bootcamp Java Backend Batch 26</description>
 
 	<properties>
+		<mssql-version>12.8.1.jre11</mssql-version>
+		<model-mapper-version>3.2.2</model-mapper-version>
 		<java.version>21</java.version>
 		<bc-version>1.80</bc-version>
 	</properties>
 
 	<dependencies>
+		<!--		START OF JPA CONFIGURATION-->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>${model-mapper-version}</version> <!-- Versi terbaru -->
+		</dependency>
+
+<!--		PER TAHUN 2019 MENJADI JAKARTA PERSISTENCE API-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>${mssql-version}</version>
+		</dependency>
+<!--		END OF JPA CONFIGURATION-->
+
 		<dependency>
 			<groupId>org.mindrot</groupId>
 			<artifactId>jbcrypt</artifactId>
