@@ -25,6 +25,10 @@ public class KategoriProduk {
     private String nama;
     @Column(name = "Deskripsi",nullable = false,length = 255,unique = true)
     private String deskripsi;
+
+    @Column(name = "Notes",nullable = false,length = 255)
+    private String notes;
+
     @Column(name = "CreatedBy",nullable = false,updatable = false)
     private Long createdBy=1L;
     @Column(name = "ModifiedBy",insertable = false)
@@ -33,6 +37,14 @@ public class KategoriProduk {
     private Date createdAt=new Date();
     @Column(name = "ModifiedAt",insertable = false)
     private Date modifiedAt;
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
     public Long getId() {
         return id;
