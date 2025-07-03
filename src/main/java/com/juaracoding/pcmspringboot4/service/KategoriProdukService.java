@@ -9,11 +9,14 @@ import com.juaracoding.pcmspringboot4.model.KategoriProduk;
 import com.juaracoding.pcmspringboot4.repo.KategoriProdukRepo;
 import com.juaracoding.pcmspringboot4.util.GlobalFunction;
 import com.juaracoding.pcmspringboot4.util.GlobalResponse;
+import com.juaracoding.pcmspringboot4.util.LoggingFile;
+import com.juaracoding.pcmspringboot4.util.TransformPagination;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +43,11 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
     @Autowired
     private ModelMapper modelMapper ;
 
-    //TRN01FV(001-010)
-    //TRN01FE(001-010)
-    //TRN01FV008
+    private String className = "KategoriProdukService";
+
+    @Autowired
+    private TransformPagination transformPagination;
+
     @Override
     public ResponseEntity<Object> save(KategoriProduk kategoriProduk, HttpServletRequest request) {
 
@@ -52,6 +57,7 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
         try{
             kategoriProdukRepo.save(kategoriProduk);
         }catch (Exception e){
+            LoggingFile.logException(className,"save(KategoriProduk kategoriProduk, HttpServletRequest request) SQLException",e);
             return GlobalResponse.internalServerError("TRN01FE001",request);
         }
 
@@ -78,7 +84,20 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
 
     @Override
     public ResponseEntity<Object> findAll(Pageable pageable, HttpServletRequest request) {
-        return null;
+        Page<KategoriProduk> pageData = null;
+        Map<String,Object> mapResponse = null;
+        try{
+            pageData =  kategoriProdukRepo.findAll(pageable);
+            if(pageData.isEmpty()){
+                return GlobalResponse.dataTidakDitemukan("TRN01FV031",request);
+            }
+            mapResponse = transformPagination.transform(mapToModelMapper(pageData.getContent()),
+                    pageData,"id",null);
+
+        }catch (Exception e){
+            return GlobalResponse.internalServerError("TRN01FE031",request);
+        }
+        return GlobalResponse.dataDitemukan(mapResponse,request);
     }
 
     @Override
@@ -127,7 +146,7 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
             RespKategoriProdukDTO respKategoriProdukDTO = new RespKategoriProdukDTO();
             respKategoriProdukDTO.setId(kategoriProduk.getId());
             respKategoriProdukDTO.setNama(kategoriProduk.getNama());
-            respKategoriProdukDTO.setDeskripsi(kategoriProduk.getDeskripsi());
+//            respKategoriProdukDTO.setDeskripsi(kategoriProduk.getDeskripsi());
             list.add(respKategoriProdukDTO);
         }
         return list;

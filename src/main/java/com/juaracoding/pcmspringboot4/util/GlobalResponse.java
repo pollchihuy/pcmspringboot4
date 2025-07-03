@@ -18,6 +18,13 @@ public class GlobalResponse {
     public static ResponseEntity<Object> internalServerError(String errorCode, HttpServletRequest request){
         return new ResponseHandler().handleResponse("SERVER SEDANG MENGALAMI GANGGUAN", HttpStatus.INTERNAL_SERVER_ERROR,null,errorCode,request);
     }
+    public static ResponseEntity<Object> dataTidakDitemukan(String errorCode, HttpServletRequest request){
+        return new ResponseHandler().handleResponse("DATA TIDAK DITEMUKAN", HttpStatus.BAD_REQUEST,null,errorCode,request);
+    }
+
+    public static ResponseEntity<Object> dataDitemukan(Object data, HttpServletRequest request){
+        return new ResponseHandler().handleResponse("DATA BERHASIL DITEMUKAN", HttpStatus.OK,data,null,request);
+    }
 
     public static ResponseEntity<Object> objectNull(String errorCode, HttpServletRequest request){
         return new ResponseHandler().handleResponse("DATA TIDAK VALID", HttpStatus.BAD_REQUEST,null,errorCode,request);
