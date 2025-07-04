@@ -1,9 +1,8 @@
 package com.juaracoding.pcmspringboot4.controller;
 
 
-import com.juaracoding.pcmspringboot4.dto.validasi.ValKategoriProdukDTO;
-import com.juaracoding.pcmspringboot4.model.KategoriProduk;
-import com.juaracoding.pcmspringboot4.service.KategoriProdukService;
+import com.juaracoding.pcmspringboot4.dto.validasi.ValProdukDTO;
+import com.juaracoding.pcmspringboot4.service.ProdukService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,22 +12,46 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("kategoriproduk")
-public class KategoriProdukController {
+@RequestMapping("produk")
+public class ProdukController {
 
     @Autowired
-    KategoriProdukService kategoriProdukService;
+    ProdukService produkService;
 
+    /**
+     {
+         "nama":"Kain Pel Super6",
+         "deskripsi":"pokoknya bersih deh semua6",
+         "merk":"Toyota6",
+         "warna":"abu abu monyet6",
+         "model":"panjang tak berujung6",
+         "stok":200,
+         "kategoriProduk":{
+                         "id":1
+                         },
+                         "suppliers":[
+                         {
+                         "id":1
+                         },
+                         {
+                         "id":2
+                         },
+                         {
+                         "id":3
+                         }
+             ]
+         }
+     */
     @PostMapping
-    public Object save(@Valid @RequestBody ValKategoriProdukDTO valKategoriProdukDTO,
+    public Object save(@Valid @RequestBody ValProdukDTO valProdukDTO,
                        HttpServletRequest request){
-        return kategoriProdukService.save(kategoriProdukService.mapToModelMapper(valKategoriProdukDTO),request);
+        return produkService.save(produkService.mapToModelMapper(valProdukDTO),request);
     }
 
     @GetMapping
     public Object findAll(HttpServletRequest request){
-        Pageable pageable = PageRequest.of(1,2, Sort.by("id").descending());
-        return kategoriProdukService.findAll(pageable,request);
+        Pageable pageable = PageRequest.of(0,2, Sort.by("id").descending());
+        return produkService.findAll(pageable,request);
     }
 
     /**
@@ -52,7 +75,7 @@ public class KategoriProdukController {
         }else {
             pageable = PageRequest.of(page,size, Sort.by(sortBy).descending());
         }
-        return kategoriProdukService.findByParam(pageable,column,value,request);
+        return produkService.findByParam(pageable,column,value,request);
     }
 
     private String switchColumnSorting(String sortBy){
@@ -63,6 +86,4 @@ public class KategoriProdukController {
         }
         return sortBy;
     }
-
-
 }

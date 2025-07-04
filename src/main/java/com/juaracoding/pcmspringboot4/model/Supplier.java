@@ -4,31 +4,21 @@ package com.juaracoding.pcmspringboot4.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
-import java.util.List;
 
-//@Table(name = "MstKategoriProduk",uniqueConstraints = @UniqueConstraint(name = "unq-deskripsi-nama", columnNames = {"nama","deskripsi"}))
-//@Table(name = "MstKategoriProduk",indexes = {
-//        @Index(name = "idx_nama", columnList = "nama"),
-//        @Index(name = "idx_deskripsi", columnList = "deskripsi", unique = true)
-//})
 @Entity
-@Table(name = "MstKategoriProduk")
-public class KategoriProduk {
-    /**
-     * unique combination
-     * unique per column
-     */
+@Table(name = "MstSupplier")
+public class Supplier {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    @Column(name = "NamaProduk",nullable = false,length = 50,unique = true)
-    private String nama;
-    @Column(name = "Deskripsi",nullable = false,length = 255,unique = true)
-    private String deskripsi;
 
-    @Column(name = "Notes",nullable = false,length = 255)
-    private String notes;
+    @Column(name = "NamaSupplier", nullable = false,unique = true,length = 50)
+    private String nama;
+
+    @Column(name = "AlamatSupplier", nullable = false,unique = true,length = 255)
+    private String alamat;
 
     @Column(name = "CreatedBy",nullable = false,updatable = false)
     private Long createdBy=1L;
@@ -38,14 +28,6 @@ public class KategoriProduk {
     private Date createdAt=new Date();
     @Column(name = "ModifiedAt",insertable = false)
     private Date modifiedAt;
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
 
     public Long getId() {
         return id;
@@ -63,12 +45,12 @@ public class KategoriProduk {
         this.nama = nama;
     }
 
-    public String getDeskripsi() {
-        return deskripsi;
+    public String getAlamat() {
+        return alamat;
     }
 
-    public void setDeskripsi(String deskripsi) {
-        this.deskripsi = deskripsi;
+    public void setAlamat(String alamat) {
+        this.alamat = alamat;
     }
 
     public Long getCreatedBy() {

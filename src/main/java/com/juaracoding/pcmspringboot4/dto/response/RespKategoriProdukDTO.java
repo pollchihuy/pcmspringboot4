@@ -7,7 +7,15 @@ public class RespKategoriProdukDTO {
 
     private String nama;
 
-//    private String deskripsi;
+    private String deskripsi;
+
+    public String getDeskripsi() {
+        return deskripsi;
+    }
+
+    public void setDeskripsi(String deskripsi) {
+        this.deskripsi = deskripsi;
+    }
 
     public Long getId() {
         return id;

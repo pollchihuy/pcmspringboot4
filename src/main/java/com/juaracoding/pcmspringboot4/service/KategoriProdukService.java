@@ -107,7 +107,19 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
 
     @Override
     public ResponseEntity<Object> findByParam(Pageable pageable, String column, String value, HttpServletRequest request) {
-        return null;
+        Page<KategoriProduk> page = null;
+        Map<String,Object> mapResponse = null;
+        try{
+            switch (column) {
+                case "nama":page=kategoriProdukRepo.findByNamaContainsIgnoreCase(value,pageable);break;
+                case "deskripsi":page=kategoriProdukRepo.findByDeskripsiContainsIgnoreCase(value,pageable);break;
+                default:page = kategoriProdukRepo.findAll(pageable);break;
+            }
+            mapResponse = transformPagination.transform(mapToModelMapper(page.getContent()),page,column,value);
+        }catch (Exception e){
+            return GlobalResponse.internalServerError("TRN01FE041",request);
+        }
+        return GlobalResponse.dataDitemukan(mapResponse,request);
     }
 
     @Override
