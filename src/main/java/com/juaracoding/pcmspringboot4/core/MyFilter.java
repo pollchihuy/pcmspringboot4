@@ -16,7 +16,8 @@ public class MyFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         if(servletRequest instanceof HttpServletRequest) {
-            String strContentType = request.getContentType();
+            Object obj = request.getContentType();
+            String strContentType = obj == null ? "" : obj.toString();
             if(!strContentType.startsWith("multipart/form-data")) {
                 request = new MyHttpServletRequestWrapper(request);
             }

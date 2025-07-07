@@ -4,6 +4,7 @@ package com.juaracoding.pcmspringboot4.controller;
 import com.juaracoding.pcmspringboot4.dto.validasi.ValKategoriProdukDTO;
 import com.juaracoding.pcmspringboot4.service.KategoriProdukService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -50,12 +51,13 @@ public class KategoriProdukController {
     public Object uploadExcel(
             @RequestParam MultipartFile file,
             HttpServletRequest request){
-        return kategoriProdukService.uploadExcel(file,request);
+//        return kategoriProdukService.uploadExcel(file,request);
+        return kategoriProdukService.uploadExcelManual(file,request);
     }
 
     @GetMapping
     public Object findAll(HttpServletRequest request){
-        Pageable pageable = PageRequest.of(1,2, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(0,50, Sort.by("id"));
         return kategoriProdukService.findAll(pageable,request);
     }
 
@@ -83,6 +85,42 @@ public class KategoriProdukController {
         return kategoriProdukService.findByParam(pageable,column,value,request);
     }
 
+    @GetMapping("/download-excel")
+    public Object downloadExcel(
+            @RequestParam String column,
+            @RequestParam String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+        return kategoriProdukService.downloadReportExcel(column,value,request,response);
+    }
+
+    @GetMapping("/download-excel-manual")
+    public Object downloadExcelManual(
+            @RequestParam String column,
+            @RequestParam String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+        return kategoriProdukService.downloadReportExcelManual(column,value,request,response);
+    }
+
+    @GetMapping("/download-pdf")
+    public Object downloadPDF(
+            @RequestParam String column,
+            @RequestParam String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+        return kategoriProdukService.downloadReportPDF(column,value,request,response);
+    }
+
+    @GetMapping("/download-pdf-manual")
+    public Object downloadPDFManual(
+            @RequestParam String column,
+            @RequestParam String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+        return kategoriProdukService.downloadReportPDFManual(column,value,request,response);
+    }
+
     private String switchColumnSorting(String sortBy){
         switch(sortBy){
             case "nama":sortBy = "nama";
@@ -91,6 +129,4 @@ public class KategoriProdukController {
         }
         return sortBy;
     }
-
-
 }

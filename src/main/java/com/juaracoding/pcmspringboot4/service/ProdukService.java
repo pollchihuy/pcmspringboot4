@@ -138,13 +138,13 @@ public class ProdukService implements IService<Produk>, IReport<Produk> {
     }
 
     @Override
-    public void downloadReportExcel(String column, String value, HttpServletRequest request, HttpServletResponse response) {
-
+    public Object downloadReportExcel(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+        return null;
     }
 
     @Override
-    public void downloadReportPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
-
+    public Object downloadReportPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+        return null;
     }
 
     /** cara manual untuk dto validasi request dalam bentuk single object */

@@ -12,7 +12,7 @@ import java.util.*;
 public class ExcelReader {
 	
 	private XSSFWorkbook wBook ;
-	private XSSFSheet sheet ;	
+	private XSSFSheet sheet ;
 	private String values ;
 	private DataFormatter dFormatter ;
 	private int intRowCount;
@@ -40,14 +40,14 @@ public class ExcelReader {
 			inputBuff = new BufferedInputStream(inputStream);
 			setDataFromExcel(inputBuff,sheetName);
 		} catch (Exception e) {
-//			LoggingFile.logException("ExcelReader","ExcelReader(InputStream inputStream, String sheetName) --> Line 46",e, OtherConfig.getEnableLog());
+			LoggingFile.logException("ExcelReader","ExcelReader(InputStream inputStream, String sheetName) Exception ",e);
 		}
 		finally {
 			try {
 				inputBuff.close();
 				wBook.close();
 			} catch (IOException e) {
-//				LoggingFile.logException("ExcelReader","ExcelReader(InputStream inputStream, String sheetName) --> Line 53",e, OtherConfig.getEnableLog());
+				LoggingFile.logException("ExcelReader","ExcelReader(InputStream inputStream, String sheetName) IOException",e);
 			}
 		}
 	}
@@ -59,7 +59,7 @@ public class ExcelReader {
 			inputBuff = new BufferedInputStream(excelFile);
 			setDataFromExcel(inputBuff,sheetName);
 		} catch (Exception e) {
-//			LoggingFile.logException("ExcelReader","ExcelReader(String excelPath, String sheetName) --> Line 64",e, OtherConfig.getEnableLog());
+			LoggingFile.logException("ExcelReader","ExcelReader(String excelPath, String sheetName) Exception",e);
 		}
 		finally {
 			try {
@@ -67,7 +67,7 @@ public class ExcelReader {
 				inputBuff.close();
 				wBook.close();
 			} catch (IOException e) {
-//				LoggingFile.logException("ExcelReader","ExcelReader(String excelPath, String sheetName) --> Line 72",e, OtherConfig.getEnableLog());
+				LoggingFile.logException("ExcelReader","ExcelReader(String excelPath, String sheetName) IOException",e);
 			}
 		}
 	}
@@ -116,6 +116,7 @@ public class ExcelReader {
 			}
 		}catch(Exception e)
 		{
+			LoggingFile.logException("ExcelReader","setData()",e);
 		}
 		this.strAllData = strAllData;
 		this.arrWithoutHeader = arrWithoutHeader;		

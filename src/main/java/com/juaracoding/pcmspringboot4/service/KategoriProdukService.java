@@ -4,7 +4,6 @@ import com.juaracoding.pcmspringboot4.core.IReport;
 import com.juaracoding.pcmspringboot4.core.IService;
 import com.juaracoding.pcmspringboot4.dto.response.RespKategoriProdukDTO;
 import com.juaracoding.pcmspringboot4.dto.validasi.ValKategoriProdukDTO;
-import com.juaracoding.pcmspringboot4.handler.ResponseHandler;
 import com.juaracoding.pcmspringboot4.model.KategoriProduk;
 import com.juaracoding.pcmspringboot4.model.LogKategoriProduk;
 import com.juaracoding.pcmspringboot4.repo.KategoriProdukRepo;
@@ -17,12 +16,15 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -47,6 +49,15 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
 
     @Autowired
     private TransformPagination transformPagination;
+
+    @Autowired
+    private SpringTemplateEngine springTemplateEngine;
+
+    @Autowired
+    private PdfGenerator pdfGenerator;
+
+
+    private StringBuilder sBuild = new StringBuilder();
 
     @Override
     public ResponseEntity<Object> save(KategoriProduk kategoriProduk, HttpServletRequest request) {
@@ -187,6 +198,24 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
         }
         return GlobalResponse.dataBerhasilDisimpan(request);
     }
+    /** contoh saja untuk manual upload dengan mapping di class lain */
+    public ResponseEntity<Object> uploadExcelManual(MultipartFile file, HttpServletRequest request) {
+        String message = "";
+        try{
+            if(!ExcelReader.hasWorkBookFormat(file)){
+                return GlobalResponse.formatFileHarusExcel("TRN01FV061",request);
+            }
+            List<KategoriProduk> list = new UploadExcel().dataKategoriProduk(file.getInputStream(),"kategori");
+            if(list.isEmpty()){
+                return GlobalResponse.fileExcelKosong("TRN01FV062",request);
+            }
+            kategoriProdukRepo.saveAll(list);
+        }catch (Exception e){
+            LoggingFile.logException(className,"uploadExcelManual(MultipartFile file, HttpServletRequest request) Request Package : "+RequestCapture.allRequest(request),e);
+            return GlobalResponse.fileExcelKosong("TRN01FE061",request);
+        }
+        return GlobalResponse.dataBerhasilDisimpan(request);
+    }
 
     @Override
     public List<KategoriProduk> convertListWorkBookToListEntity(List<Map<String, String>> workBookData, Long userId) {
@@ -203,13 +232,120 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
     }
 
     @Override
-    public void downloadReportExcel(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+    public Object downloadReportExcel(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+        List<KategoriProduk> listKategoriProduk = null;
+        try {
+            switch (column){
+                case "nama" : listKategoriProduk = kategoriProdukRepo.findByNamaContainsIgnoreCase(value);break;
+                case "deskripsi" : listKategoriProduk = kategoriProdukRepo.findByDeskripsiContainsIgnoreCase(value);break;
+                case "notes" : listKategoriProduk = kategoriProdukRepo.findByNotesContainsIgnoreCase(value);break;
+                default:listKategoriProduk=kategoriProdukRepo.findAll();break;
+            }
+            if(listKategoriProduk.isEmpty()){
+                return GlobalResponse.dataTidakDitemukan("TRN01FV071",request);
+            }
+            /** langkah pertama , convert dulu object ke dto yang benar-benar akan di display di file excel */
+            List<RespKategoriProdukDTO> listDTO = mapToModelMapper(listKategoriProduk);
+            new MappingReport().mappingReportExcel(listDTO,"kategori-produk",new RespKategoriProdukDTO(),response);
+        }catch (Exception e){
+            return GlobalResponse.internalServerError("TRN01FE071",request);
+        }
 
+        return "";
+    }
+
+    public Object downloadReportExcelManual(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+        List<KategoriProduk> listKategoriProduk = null;
+        try {
+            switch (column){
+                case "nama" : listKategoriProduk = kategoriProdukRepo.findByNamaContainsIgnoreCase(value);break;
+                case "deskripsi" : listKategoriProduk = kategoriProdukRepo.findByDeskripsiContainsIgnoreCase(value);break;
+                case "notes" : listKategoriProduk = kategoriProdukRepo.findByNotesContainsIgnoreCase(value);break;
+                default:listKategoriProduk=kategoriProdukRepo.findAll();break;
+            }
+            if(listKategoriProduk.isEmpty()){
+                return GlobalResponse.dataTidakDitemukan("TRN01FV071",request);
+            }
+            String headerKey = "Content-Disposition";
+            sBuild.setLength(0);
+            String headerValue = sBuild.append("attachment; filename=kategori-produk_").
+                    append(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(new Date())).
+                    append(".xlsx").toString();
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader(headerKey, headerValue);
+            int listSize = listKategoriProduk.size();
+            String [] headerArr = new String[4];//kolom judul di excel
+            String [][] strBody = new String[listSize][4];
+            headerArr[0]="ID";
+            headerArr[1]="NAMA";
+            headerArr[2]="DESKRIPSI";
+            headerArr[3]="NOTES";
+            for (int i = 0; i < listSize; i++) {
+                strBody[i][0]=listKategoriProduk.get(i).getId().toString();
+                strBody[i][1]=listKategoriProduk.get(i).getNama().toString();
+                strBody[i][2]=listKategoriProduk.get(i).getDeskripsi().toString();
+                strBody[i][3]=listKategoriProduk.get(i).getNotes().toString();
+            }
+            new ExcelWriter(strBody,headerArr,"sheet-1",response);
+        }catch (Exception e){
+            return GlobalResponse.internalServerError("TRN01FE071",request);
+        }
+
+        return "File Berhasil Di download";
     }
 
     @Override
-    public void downloadReportPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+    public Object downloadReportPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+        List<KategoriProduk> listKategoriProduk = null;
+        try {
+            switch (column){
+                case "nama" : listKategoriProduk = kategoriProdukRepo.findByNamaContainsIgnoreCase(value);break;
+                case "deskripsi" : listKategoriProduk = kategoriProdukRepo.findByDeskripsiContainsIgnoreCase(value);break;
+                case "notes" : listKategoriProduk = kategoriProdukRepo.findByNotesContainsIgnoreCase(value);break;
+                default:listKategoriProduk=kategoriProdukRepo.findAll();break;
+            }
+            if(listKategoriProduk.isEmpty()){
+                return GlobalResponse.dataTidakDitemukan("TRN01FV081",request);
+            }
+            List<RespKategoriProdukDTO> listDTO = mapToModelMapper(listKategoriProduk);
+            new MappingReport().mappingReportPDF(listDTO,"kategori-produk","REPORT DATA KATEGORI PRODUK",
+                    new RespKategoriProdukDTO(),springTemplateEngine,pdfGenerator,response);
+            }catch (Exception e){
+                return GlobalResponse.internalServerError("TRN01FE081",request);
+            }
+        return "Download Report PDF Berhasil";
+    }
 
+    public Object downloadReportPDFManual(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+        List<KategoriProduk> listKategoriProduk = null;
+        try {
+            switch (column){
+                case "nama" : listKategoriProduk = kategoriProdukRepo.findByNamaContainsIgnoreCase(value);break;
+                case "deskripsi" : listKategoriProduk = kategoriProdukRepo.findByDeskripsiContainsIgnoreCase(value);break;
+                case "notes" : listKategoriProduk = kategoriProdukRepo.findByNotesContainsIgnoreCase(value);break;
+                default:listKategoriProduk=kategoriProdukRepo.findAll();break;
+            }
+            if(listKategoriProduk.isEmpty()){
+                return GlobalResponse.dataTidakDitemukan("TRN01FV081",request);
+            }
+            List<RespKategoriProdukDTO> listDTO = mapToModelMapper(listKategoriProduk);
+            int intRepKategoriProdukDTOSize = listDTO.size();
+            Map<String,Object> mapResponse = new HashMap<>();
+            String strHtml = null;
+            Context context = new Context();
+
+            mapResponse.put("title","REPORT DATA KATEGORI PRODUK");
+            mapResponse.put("listContent",listDTO);
+            mapResponse.put("timestamp", LocalDateTime.now());
+            mapResponse.put("totalData",intRepKategoriProdukDTOSize);
+            mapResponse.put("username","Paul");
+            context.setVariables(mapResponse);
+            strHtml = springTemplateEngine.process("report/kategori-produk",context);
+            pdfGenerator.htmlToPdf(strHtml,"kategori-produk",response);
+        }catch (Exception e){
+            return GlobalResponse.internalServerError("AUT01FE081",request);
+        }
+        return "Download Report PDF Berhasil";
     }
 
     /** cara manual untuk dto validasi request dalam bentuk single object */
