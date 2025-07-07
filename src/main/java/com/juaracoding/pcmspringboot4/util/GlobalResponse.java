@@ -14,6 +14,9 @@ public class GlobalResponse {
     public static ResponseEntity<Object> dataBerhasilDiubah(HttpServletRequest request){
         return new ResponseHandler().handleResponse("DATA BERHASIL DIUBAH", HttpStatus.OK,null,null,request);
     }
+    public static ResponseEntity<Object> dataBerhasilDihapus(HttpServletRequest request){
+        return new ResponseHandler().handleResponse("DATA BERHASIL DIHAPUS", HttpStatus.OK,null,null,request);
+    }
 
     public static ResponseEntity<Object> internalServerError(String errorCode, HttpServletRequest request){
         return new ResponseHandler().handleResponse("SERVER SEDANG MENGALAMI GANGGUAN", HttpStatus.INTERNAL_SERVER_ERROR,null,errorCode,request);
@@ -24,6 +27,18 @@ public class GlobalResponse {
 
     public static ResponseEntity<Object> dataDitemukan(Object data, HttpServletRequest request){
         return new ResponseHandler().handleResponse("DATA BERHASIL DITEMUKAN", HttpStatus.OK,data,null,request);
+    }
+
+    public static ResponseEntity<Object> formatFileHarusExcel(String errorCode,HttpServletRequest request){
+        return new ResponseHandler().handleResponse("FORMAT FILE HARUS XLSX", HttpStatus.BAD_REQUEST,null,errorCode,request);
+    }
+
+    public static ResponseEntity<Object> fileExcelKosong(String errorCode,HttpServletRequest request){
+        return new ResponseHandler().handleResponse("FILE EXCEL KOSONG", HttpStatus.BAD_REQUEST,null,errorCode,request);
+    }
+
+    public static ResponseEntity<Object> uploadFileError(String errorCode,HttpServletRequest request){
+        return new ResponseHandler().handleResponse("UPLOAD FILE BERMASALAH", HttpStatus.INTERNAL_SERVER_ERROR,null,errorCode,request);
     }
 
     public static ResponseEntity<Object> objectNull(String errorCode, HttpServletRequest request){

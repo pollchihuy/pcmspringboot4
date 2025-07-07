@@ -19,9 +19,38 @@
 		<model-mapper-version>3.2.2</model-mapper-version>
 		<java.version>21</java.version>
 		<bc-version>1.80</bc-version>
+		<poi-version>5.4.0</poi-version>
 	</properties>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi-version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.sun.mail/jakarta.mail -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>jakarta.mail</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+
+		<!--		START LIBRARY REPORT THYMELEAF -->
+		<!-- https://mvnrepository.com/artifact/com.itextpdf/html2pdf -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>html2pdf</artifactId>
+			<version>5.0.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<!--		END LIBRARY REPORT THYMELEAF -->
 
 		<!-- Log4j2 Starter -->
 		<dependency>

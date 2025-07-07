@@ -2,6 +2,7 @@ package com.juaracoding.pcmspringboot4.handler;
 
 import com.juaracoding.pcmspringboot4.config.OtherConfig;
 import com.juaracoding.pcmspringboot4.util.LoggingFile;
+import com.juaracoding.pcmspringboot4.util.RequestCapture;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -48,23 +49,24 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler {
 //            mapError.put("rejectedValue", fieldError.getRejectedValue());
             errors.add(mapError);
         }
+        LoggingFile.logException("GlobalExceptionHandler","handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request)  Request Package : "+ RequestCapture.allRequest(request),ex);
         return new ResponseHandler().handleResponse("REQUEST TIDAK VALID", HttpStatus.BAD_REQUEST,errors,"X01001",request);
     }
 
     @ExceptionHandler(UnexpectedRollbackException.class)
     public ResponseEntity<Object> unexpectedRollbackException(UnexpectedRollbackException ex, HttpServletRequest request){
-        LoggingFile.logException("GlobalExceptionHandler","multipartException ",ex);
+        LoggingFile.logException("GlobalExceptionHandler","unexpectedRollbackException(UnexpectedRollbackException ex, HttpServletRequest request) ",ex);
         return new ResponseHandler().handleResponse("Kesalahan Input Data , Contoh : Entry Data duplikat",HttpStatus.BAD_REQUEST,null,"X02001",request);
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> runtimeException(RuntimeException ex, HttpServletRequest request){
-        LoggingFile.logException("GlobalExceptionHandler","runtimeException ",ex);
+        LoggingFile.logException("GlobalExceptionHandler","runtimeException(RuntimeException ex, HttpServletRequest request) ",ex);
         return new ResponseHandler().handleResponse("Terjadi Kesalahan Di Server",HttpStatus.INTERNAL_SERVER_ERROR,null,"X05001",request);
     }
 
     public ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, HttpServletRequest request) {
-        LoggingFile.logException("GlobalExceptionHandler","handleExceptionInternal ",ex);
+        LoggingFile.logException("GlobalExceptionHandler","handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, HttpServletRequest request) ",ex);
         return new ResponseHandler().handleResponse("Terjadi Kesalahan Di Server",status,null,"X05999",request);
     }
 }
