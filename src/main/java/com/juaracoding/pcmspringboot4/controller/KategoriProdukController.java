@@ -84,7 +84,7 @@ public class KategoriProdukController {
         }
         return kategoriProdukService.findByParam(pageable,column,value,request);
     }
-
+//    http://localhost:8081/kategoriproduk/download-excel?column=id&size=2&value=aa
     @GetMapping("/download-excel")
     public Object downloadExcel(
             @RequestParam String column,
@@ -93,7 +93,7 @@ public class KategoriProdukController {
             HttpServletResponse response){
         return kategoriProdukService.downloadReportExcel(column,value,request,response);
     }
-
+//    http://localhost:8081/kategoriproduk/download-excel-manual?column=id&size=2&value=aa
     @GetMapping("/download-excel-manual")
     public Object downloadExcelManual(
             @RequestParam String column,
@@ -103,6 +103,7 @@ public class KategoriProdukController {
         return kategoriProdukService.downloadReportExcelManual(column,value,request,response);
     }
 
+    //    http://localhost:8081/kategoriproduk/download-pdf?column=id&size=2&value=aa
     @GetMapping("/download-pdf")
     public Object downloadPDF(
             @RequestParam String column,
@@ -111,7 +112,7 @@ public class KategoriProdukController {
             HttpServletResponse response){
         return kategoriProdukService.downloadReportPDF(column,value,request,response);
     }
-
+//    http://localhost:8081/kategoriproduk/download-pdf-manual?column=id&size=2&value=aa
     @GetMapping("/download-pdf-manual")
     public Object downloadPDFManual(
             @RequestParam String column,

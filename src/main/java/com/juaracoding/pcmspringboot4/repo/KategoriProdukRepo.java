@@ -16,6 +16,7 @@ public interface KategoriProdukRepo extends JpaRepository<KategoriProduk,Long> {
     Page<KategoriProduk> findByDeskripsiContainsIgnoreCase(String nama, Pageable pageable);
     Page<KategoriProduk> findByNotesContainsIgnoreCase(String nama, Pageable pageable);
 
+    /** ini khusus untuk report */
     List<KategoriProduk> findByNamaContainsIgnoreCase(String nama);
     //SELECT * FROM MstKategoriProduk WHERE toLower(nama) LIKE '%toLower(?)%'
     List<KategoriProduk> findByDeskripsiContainsIgnoreCase(String nama);

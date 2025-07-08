@@ -76,6 +76,7 @@ public class MappingReport {
 
         mapResponse.put("title",reportTitle);
         mapResponse.put("listKolom",listTemp);
+        mapResponse.put("timestamp",new Date());
         mapResponse.put("listHelper",listHelper);
         mapResponse.put("listContent",listMap);
         mapResponse.put("totalData",intRepGroupMenuDTOSize);

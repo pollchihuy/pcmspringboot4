@@ -198,6 +198,7 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
         }
         return GlobalResponse.dataBerhasilDisimpan(request);
     }
+
     /** contoh saja untuk manual upload dengan mapping di class lain */
     public ResponseEntity<Object> uploadExcelManual(MultipartFile file, HttpServletRequest request) {
         String message = "";
@@ -205,7 +206,7 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
             if(!ExcelReader.hasWorkBookFormat(file)){
                 return GlobalResponse.formatFileHarusExcel("TRN01FV061",request);
             }
-            List<KategoriProduk> list = new UploadExcel().dataKategoriProduk(file.getInputStream(),"kategori");
+            List<KategoriProduk> list = new UploadExcel().dataKategoriProduk(file.getInputStream(),"kategori",1L);
             if(list.isEmpty()){
                 return GlobalResponse.fileExcelKosong("TRN01FV062",request);
             }
@@ -232,7 +233,8 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
     }
 
     @Override
-    public Object downloadReportExcel(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+    public Object downloadReportExcel(String column, String value,
+                                      HttpServletRequest request, HttpServletResponse response) {
         List<KategoriProduk> listKategoriProduk = null;
         try {
             switch (column){
@@ -246,7 +248,10 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
             }
             /** langkah pertama , convert dulu object ke dto yang benar-benar akan di display di file excel */
             List<RespKategoriProdukDTO> listDTO = mapToModelMapper(listKategoriProduk);
-            new MappingReport().mappingReportExcel(listDTO,"kategori-produk",new RespKategoriProdukDTO(),response);
+            new MappingReport().mappingReportExcel(listDTO,
+                    "kategori-produk",
+                    new RespKategoriProdukDTO(),
+                    response);
         }catch (Exception e){
             return GlobalResponse.internalServerError("TRN01FE071",request);
         }
@@ -254,7 +259,9 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
         return "";
     }
 
-    public Object downloadReportExcelManual(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+    public Object downloadReportExcelManual(String column, String value,
+                                            HttpServletRequest request,
+                                            HttpServletResponse response) {
         List<KategoriProduk> listKategoriProduk = null;
         try {
             switch (column){
@@ -270,27 +277,28 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
             sBuild.setLength(0);
             String headerValue = sBuild.append("attachment; filename=kategori-produk_").
                     append(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(new Date())).
-                    append(".xlsx").toString();
+                    append(".xlsx").toString();// mime type / content type
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             response.setHeader(headerKey, headerValue);
             int listSize = listKategoriProduk.size();
             String [] headerArr = new String[4];//kolom judul di excel
-            String [][] strBody = new String[listSize][4];
+
             headerArr[0]="ID";
             headerArr[1]="NAMA";
             headerArr[2]="DESKRIPSI";
-            headerArr[3]="NOTES";
+            headerArr[3]="NOTEz";
+
+            String [][] strBody = new String[listSize][4];
             for (int i = 0; i < listSize; i++) {
                 strBody[i][0]=listKategoriProduk.get(i).getId().toString();
                 strBody[i][1]=listKategoriProduk.get(i).getNama().toString();
                 strBody[i][2]=listKategoriProduk.get(i).getDeskripsi().toString();
-                strBody[i][3]=listKategoriProduk.get(i).getNotes().toString();
+                strBody[i][3]=listKategoriProduk.get(i).getNotes().toString()+" Data ke 4";
             }
             new ExcelWriter(strBody,headerArr,"sheet-1",response);
         }catch (Exception e){
             return GlobalResponse.internalServerError("TRN01FE071",request);
         }
-
         return "File Berhasil Di download";
     }
 
@@ -308,7 +316,9 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
                 return GlobalResponse.dataTidakDitemukan("TRN01FV081",request);
             }
             List<RespKategoriProdukDTO> listDTO = mapToModelMapper(listKategoriProduk);
-            new MappingReport().mappingReportPDF(listDTO,"kategori-produk","REPORT DATA KATEGORI PRODUK",
+            new MappingReport().mappingReportPDF(listDTO,
+                    "kategori-produk",
+                    "REPORT DATA KATEGORI PRODUK",
                     new RespKategoriProdukDTO(),springTemplateEngine,pdfGenerator,response);
             }catch (Exception e){
                 return GlobalResponse.internalServerError("TRN01FE081",request);
@@ -360,7 +370,7 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
         RespKategoriProdukDTO respKategoriProdukDTO = new RespKategoriProdukDTO();
         respKategoriProdukDTO.setId(kategoriProduk.getId());
         respKategoriProdukDTO.setNama(kategoriProduk.getNama());
-        respKategoriProdukDTO.setDeskripsi(kategoriProduk.getDeskripsi());
+//        respKategoriProdukDTO.setDeskripsi(kategoriProduk.getDeskripsi());
         return respKategoriProdukDTO;
     }
 

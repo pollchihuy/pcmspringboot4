@@ -16,7 +16,7 @@
             padding: 10px;
             background-color: #003366;
             color: white;
-            font-size: 18px; /* Set base font size */
+            font-size: 16px; /* Set base font size */
         }
         .header img {
             position: absolute;
@@ -83,7 +83,7 @@
 <body>
 <div class="header">
     <h3 th:text="${title}"></h3>
-    <img th:src="@{classpath:static/bcafinance.png}" width="100px" alt="" />
+    <img th:src="@{classpath:static/bcafinance.png}" width="200px" alt="" />
 </div>
 
 <div class="report-details">
@@ -94,20 +94,29 @@
 <table>
     <thead>
     <tr>
-        <th:block th:each="headerName : ${listKolom}">
-            <th th:text="${headerName}"></th>
-        </th:block>
+        <th>ID</th>
+        <th>NAMA</th>
+        <th>DESKRIPSI</th>
+        <th>MODEL</th>
+        <th>MERK</th>
+        <th>WARNA</th>
+        <th>STOK</th>
+        <th>KATEGORI</th>
+
     </tr>
     </thead>
     <tbody>
-    <th:block th:each="entry:${listContent}">
-        <tr>
-            <th:block th:each="f:${listHelper}" >
-                <td th:text="${entry.get(f)}"></td>
-            </th:block>
-            </th:block>
-        </tr>
-    </th:block>
+
+    <tr th:each="f:${listContent}">
+            <td th:text="${f.id}"></td> 
+            <td th:text="${f.nama}"></td>
+            <td th:text="${f.deskripsi}"></td>
+            <td th:text="${f.model}"></td>
+            <td th:text="${f.merk}"></td>
+            <td th:text="${f.warna}"></td>
+            <td th:text="${f.stok}"></td>
+            <td th:text="${f.kategori}"></td>
+    </tr>
 
     </tbody>
 </table>
