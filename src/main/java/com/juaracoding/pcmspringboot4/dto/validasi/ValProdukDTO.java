@@ -18,6 +18,7 @@ Created on 04/07/2025 20:45
 Version 1.0
 */
 public class ValProdukDTO {
+    
     private String nama;
     private String deskripsi;
     private String model;

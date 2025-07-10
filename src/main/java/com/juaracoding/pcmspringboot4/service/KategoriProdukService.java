@@ -220,6 +220,26 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
 
     @Override
     public List<KategoriProduk> convertListWorkBookToListEntity(List<Map<String, String>> workBookData, Long userId) {
+
+//        Map<String,Object> m  = new HashMap<>();
+//        try{
+//            int intCheck = 0;
+//            for (Map<String, String> map : workBookData) {
+//                String strNama = map.get("NAMA KATEGORI PRODUK");
+//                String strDeskripsi = map.get("DESKRIPSI KATEGORI PRODUK");
+//                String strNotes = map.get("NOTES KATEGORI PRODUK");
+//                intCheck = GlobalFunction.matchingPattern(strNama,"^[a-zA-Z\\s]{10,50}$")==false?1:intCheck;
+//                intCheck = GlobalFunction.matchingPattern(strDeskripsi,"^[a-zA-Z\\s]{20,255}$")==false?1:intCheck;
+//                intCheck = GlobalFunction.matchingPattern(strNotes,"^[a-zA-Z\\s]{20,255}$")==false?1:intCheck;
+//                if(intCheck!=0){
+//                    m.put("ok",false);
+//                    break;
+//                }
+//            }
+//
+//        }catch (Exception e){
+//
+//        }
         List<KategoriProduk> kategoriProdukList = new ArrayList<>();
         for (Map<String, String> map : workBookData) {
             KategoriProduk kategoriProduk = new KategoriProduk();
@@ -229,6 +249,7 @@ public class KategoriProdukService implements IService<KategoriProduk>, IReport<
             kategoriProduk.setCreatedBy(userId);
             kategoriProdukList.add(kategoriProduk);
         }
+//        m.put("data",kategoriProdukList);
         return kategoriProdukList;
     }
 

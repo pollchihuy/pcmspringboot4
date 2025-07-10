@@ -1,6 +1,9 @@
 package com.juaracoding.pcmspringboot4.util;
 
 import com.juaracoding.pcmspringboot4.config.OtherConfig;
+import org.springframework.validation.BindingResult;
+
+import java.util.regex.Pattern;
 
 /*
 IntelliJ IDEA 2024.1.4 (Ultimate Edition)
@@ -17,5 +20,13 @@ public class GlobalFunction {
         if(OtherConfig.getEnablePrint().equals("y")){
             System.out.println(object);
         }
+    }
+    public static Boolean matchingPattern(String value,String regex
+                                       ){
+        Boolean isValid = Pattern.compile(regex).matcher(value).find();
+        if(!isValid){
+            return false;
+        }
+        return true;
     }
 }

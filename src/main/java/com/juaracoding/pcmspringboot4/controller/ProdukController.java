@@ -4,12 +4,14 @@ package com.juaracoding.pcmspringboot4.controller;
 import com.juaracoding.pcmspringboot4.dto.validasi.ValProdukDTO;
 import com.juaracoding.pcmspringboot4.service.ProdukService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("produk")
@@ -18,48 +20,39 @@ public class ProdukController {
     @Autowired
     ProdukService produkService;
 
-    /**
-     {
-         "nama":"Kain Pel Super6",
-         "deskripsi":"pokoknya bersih deh semua6",
-         "merk":"Toyota6",
-         "warna":"abu abu monyet6",
-         "model":"panjang tak berujung6",
-         "stok":200,
-         "kategoriProduk":{
-                         "id":1
-                         },
-                         "suppliers":[
-                         {
-                         "id":1
-                         },
-                         {
-                         "id":2
-                         },
-                         {
-                         "id":3
-                         }
-             ]
-         }
-     */
     @PostMapping
     public Object save(@Valid @RequestBody ValProdukDTO valProdukDTO,
                        HttpServletRequest request){
-
         return produkService.save(produkService.mapToModelMapper(valProdukDTO),request);
+    }
+    @PutMapping("/{id}")
+    public Object update(
+                        @PathVariable Long id,
+                        @Valid @RequestBody ValProdukDTO valProdukDTO,
+                        HttpServletRequest request){
+        return produkService.update(id, produkService.mapToModelMapper(valProdukDTO),request);
+    }
+
+    @DeleteMapping("/{id}")
+    public Object delete(
+            @PathVariable Long id,
+            HttpServletRequest request){
+        return produkService.delete(id,request);
+    }
+
+    @GetMapping("/{id}")
+    public Object findById(
+            @PathVariable Long id,
+            HttpServletRequest request){
+        return produkService.findById(id,request);
     }
 
     @GetMapping
     public Object findAll(HttpServletRequest request){
-        Pageable pageable = PageRequest.of(0,2, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(0,50, Sort.by("id"));
         return produkService.findAll(pageable,request);
     }
 
-    /**
-     * Fungsional API ini untuk Filter maupun Sorting
-     * @param request
-     * @return
-     */
     @GetMapping("/{sort}/{sort-by}/{page}")
     public Object findByParam(
             @PathVariable Integer page,
@@ -79,10 +72,41 @@ public class ProdukController {
         return produkService.findByParam(pageable,column,value,request);
     }
 
+    @PostMapping("/upload-excel")
+    public Object uploadExcel(
+            @RequestParam MultipartFile file,
+            HttpServletRequest request){
+        return produkService.uploadExcel(file,request);
+    }
+
+//    http://localhost:8081/produk/download-excel?column=id&size=2&value=aa
+    @GetMapping("/download-excel")
+    public Object downloadExcel(
+            @RequestParam String column,
+            @RequestParam String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+        return produkService.downloadReportExcel(column,value,request,response);
+    }
+
+    //    http://localhost:8081/produk/download-pdf?column=id&size=2&value=aa
+    @GetMapping("/download-pdf")
+    public Object downloadPDF(
+            @RequestParam String column,
+            @RequestParam String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+        return produkService.downloadReportPDF(column,value,request,response);
+    }
+
     private String switchColumnSorting(String sortBy){
         switch(sortBy){
             case "nama":sortBy = "nama";
             case "deskripsi":sortBy = "deskripsi";
+            case "merk":sortBy = "merk";
+            case "model":sortBy = "model";
+            case "warna":sortBy = "warna";
+            case "stok":sortBy = "stok";
             default:sortBy = "id";
         }
         return sortBy;

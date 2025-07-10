@@ -1,8 +1,8 @@
 package com.juaracoding.pcmspringboot4.controller;
 
 
-import com.juaracoding.pcmspringboot4.dto.validasi.ValKategoriProdukDTO;
-import com.juaracoding.pcmspringboot4.service.KategoriProdukService;
+import com.juaracoding.pcmspringboot4.dto.validasi.ValSupplierDTO;
+import com.juaracoding.pcmspringboot4.service.SupplierService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -14,51 +14,43 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("kategoriproduk")
-public class KategoriProdukController {
+@RequestMapping("supplier")
+public class SupplierController {
 
     @Autowired
-    KategoriProdukService kategoriProdukService;
+    SupplierService supplierService;
 
     @PostMapping
-    public Object save(@Valid @RequestBody ValKategoriProdukDTO valKategoriProdukDTO,
+    public Object save(@Valid @RequestBody ValSupplierDTO valSupplierDTO,
                        HttpServletRequest request){
-        return kategoriProdukService.save(kategoriProdukService.mapToModelMapper(valKategoriProdukDTO),request);
+        return supplierService.save(supplierService.mapToModelMapper(valSupplierDTO),request);
     }
     @PutMapping("/{id}")
     public Object update(
                         @PathVariable Long id,
-                        @Valid @RequestBody ValKategoriProdukDTO valKategoriProdukDTO,
+                        @Valid @RequestBody ValSupplierDTO valSupplierDTO,
                         HttpServletRequest request){
-        return kategoriProdukService.update(id,kategoriProdukService.mapToModelMapper(valKategoriProdukDTO),request);
+        return supplierService.update(id, supplierService.mapToModelMapper(valSupplierDTO),request);
     }
 
     @DeleteMapping("/{id}")
     public Object delete(
             @PathVariable Long id,
             HttpServletRequest request){
-        return kategoriProdukService.delete(id,request);
+        return supplierService.delete(id,request);
     }
 
     @GetMapping("/{id}")
     public Object findById(
             @PathVariable Long id,
             HttpServletRequest request){
-        return kategoriProdukService.findById(id,request);
-    }
-
-    @PostMapping("/upload-excel")
-    public Object uploadExcel(
-            @RequestParam MultipartFile file,
-            HttpServletRequest request){
-//        return kategoriProdukService.uploadExcel(file,request);
-        return kategoriProdukService.uploadExcelManual(file,request);
+        return supplierService.findById(id,request);
     }
 
     @GetMapping
     public Object findAll(HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,50, Sort.by("id"));
-        return kategoriProdukService.findAll(pageable,request);
+        return supplierService.findAll(pageable,request);
     }
 
     /**
@@ -75,9 +67,6 @@ public class KategoriProdukController {
             @RequestParam String column,
             @RequestParam String value,
             HttpServletRequest request){
-        if(sort.length()>4){
-
-        }
         Pageable pageable = null;
         sortBy = switchColumnSorting(sortBy);//sudah di filter agar aplikasi tidak error
         if(sort.equals("asc")){
@@ -85,50 +74,40 @@ public class KategoriProdukController {
         }else {
             pageable = PageRequest.of(page,size, Sort.by(sortBy).descending());
         }
-        return kategoriProdukService.findByParam(pageable,column,value,request);
+        return supplierService.findByParam(pageable,column,value,request);
     }
-//    http://localhost:8081/kategoriproduk/download-excel?column=id&size=2&value=aa
+
+    @PostMapping("/upload-excel")
+    public Object uploadExcel(
+            @RequestParam MultipartFile file,
+            HttpServletRequest request){
+        return supplierService.uploadExcel(file,request);
+    }
+
+//    http://localhost:8081/supplier/download-excel?column=id&size=2&value=aa
     @GetMapping("/download-excel")
     public Object downloadExcel(
             @RequestParam String column,
             @RequestParam String value,
             HttpServletRequest request,
             HttpServletResponse response){
-        return kategoriProdukService.downloadReportExcel(column,value,request,response);
-    }
-//    http://localhost:8081/kategoriproduk/download-excel-manual?column=id&size=2&value=aa
-    @GetMapping("/download-excel-manual")
-    public Object downloadExcelManual(
-            @RequestParam String column,
-            @RequestParam String value,
-            HttpServletRequest request,
-            HttpServletResponse response){
-        return kategoriProdukService.downloadReportExcelManual(column,value,request,response);
+        return supplierService.downloadReportExcel(column,value,request,response);
     }
 
-    //    http://localhost:8081/kategoriproduk/download-pdf?column=id&size=2&value=aa
+    //    http://localhost:8081/supplier/download-pdf?column=id&size=2&value=aa
     @GetMapping("/download-pdf")
     public Object downloadPDF(
             @RequestParam String column,
             @RequestParam String value,
             HttpServletRequest request,
             HttpServletResponse response){
-        return kategoriProdukService.downloadReportPDF(column,value,request,response);
-    }
-//    http://localhost:8081/kategoriproduk/download-pdf-manual?column=id&size=2&value=aa
-    @GetMapping("/download-pdf-manual")
-    public Object downloadPDFManual(
-            @RequestParam String column,
-            @RequestParam String value,
-            HttpServletRequest request,
-            HttpServletResponse response){
-        return kategoriProdukService.downloadReportPDFManual(column,value,request,response);
+        return supplierService.downloadReportPDF(column,value,request,response);
     }
 
     private String switchColumnSorting(String sortBy){
         switch(sortBy){
             case "nama":sortBy = "nama";
-            case "deskripsi":sortBy = "deskripsi";
+            case "alamat":sortBy = "alamat";
             default:sortBy = "id";
         }
         return sortBy;
