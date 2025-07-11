@@ -17,7 +17,7 @@ Version 1.0
 public class GlobalFunction {
 
     public static void print(Object object){
-        if(OtherConfig.getEnablePrint().equals("y")){
+        if(OtherConfig.getEnablePrintConsole().equals("y")){
             System.out.println(object);
         }
     }

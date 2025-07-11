@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,11 +22,13 @@ public class KategoriProdukController {
     KategoriProdukService kategoriProdukService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object save(@Valid @RequestBody ValKategoriProdukDTO valKategoriProdukDTO,
                        HttpServletRequest request){
         return kategoriProdukService.save(kategoriProdukService.mapToModelMapper(valKategoriProdukDTO),request);
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object update(
                         @PathVariable Long id,
                         @Valid @RequestBody ValKategoriProdukDTO valKategoriProdukDTO,
@@ -34,6 +37,7 @@ public class KategoriProdukController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object delete(
             @PathVariable Long id,
             HttpServletRequest request){
@@ -41,6 +45,7 @@ public class KategoriProdukController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object findById(
             @PathVariable Long id,
             HttpServletRequest request){
@@ -48,6 +53,7 @@ public class KategoriProdukController {
     }
 
     @PostMapping("/upload-excel")
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object uploadExcel(
             @RequestParam MultipartFile file,
             HttpServletRequest request){
@@ -56,6 +62,7 @@ public class KategoriProdukController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object findAll(HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,50, Sort.by("id"));
         return kategoriProdukService.findAll(pageable,request);
@@ -67,6 +74,7 @@ public class KategoriProdukController {
      * @return
      */
     @GetMapping("/{sort}/{sort-by}/{page}")
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object findByParam(
             @PathVariable Integer page,
             @PathVariable(value = "sort-by") String sortBy,
@@ -79,7 +87,11 @@ public class KategoriProdukController {
 
         }
         Pageable pageable = null;
+//        if(sortBy.equals("umur")){
+//            sort=sort.equals("asc")?"desc":"asc";
+//        }
         sortBy = switchColumnSorting(sortBy);//sudah di filter agar aplikasi tidak error
+
         if(sort.equals("asc")){
             pageable = PageRequest.of(page,size, Sort.by(sortBy));
         }else {
@@ -89,6 +101,7 @@ public class KategoriProdukController {
     }
 //    http://localhost:8081/kategoriproduk/download-excel?column=id&size=2&value=aa
     @GetMapping("/download-excel")
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object downloadExcel(
             @RequestParam String column,
             @RequestParam String value,
@@ -98,6 +111,7 @@ public class KategoriProdukController {
     }
 //    http://localhost:8081/kategoriproduk/download-excel-manual?column=id&size=2&value=aa
     @GetMapping("/download-excel-manual")
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object downloadExcelManual(
             @RequestParam String column,
             @RequestParam String value,
@@ -108,6 +122,7 @@ public class KategoriProdukController {
 
     //    http://localhost:8081/kategoriproduk/download-pdf?column=id&size=2&value=aa
     @GetMapping("/download-pdf")
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object downloadPDF(
             @RequestParam String column,
             @RequestParam String value,
@@ -117,6 +132,7 @@ public class KategoriProdukController {
     }
 //    http://localhost:8081/kategoriproduk/download-pdf-manual?column=id&size=2&value=aa
     @GetMapping("/download-pdf-manual")
+    @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object downloadPDFManual(
             @RequestParam String column,
             @RequestParam String value,
@@ -129,6 +145,7 @@ public class KategoriProdukController {
         switch(sortBy){
             case "nama":sortBy = "nama";
             case "deskripsi":sortBy = "deskripsi";
+//            case "umur":sortBy = "tanggalLahir";
             default:sortBy = "id";
         }
         return sortBy;

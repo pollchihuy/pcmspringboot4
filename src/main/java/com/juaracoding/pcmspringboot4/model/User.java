@@ -52,6 +52,9 @@ public class User implements UserDetails {
     @Transient
     private Integer umur;
 
+    @Transient
+    private String passwordConfirmation;
+
     @Column(name = "OTP",length = 64)
     private String otp;
 
@@ -81,27 +84,21 @@ public class User implements UserDetails {
     @Column(name = "TokenEstafet",length = 64)
     private String tokenEstafet;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "IDAkses",foreignKey = @ForeignKey(name = "fk-user-to-akses"))
-//    private Akses akses;
-//
-//    /** disini letak role dari user nya yang akan di baca di API nanti */
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        List<Menu> lt = this.akses.getListMenu();
-//        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-//        for (Menu m :lt) {
-//            grantedAuthorities.add(new SimpleGrantedAuthority(m.getNama()));
-//        }
-//        return grantedAuthorities;
-//    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "IDAkses",foreignKey = @ForeignKey(name = "fk-user-to-akses"))
+    private Akses akses;
 
     /** disini letak role dari user nya yang akan di baca di API nanti */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        return List.of();
+        List<Menu> lt = this.akses.getListMenu();
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        for (Menu m :lt) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(m.getNama()));
+        }
+        return grantedAuthorities;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -123,13 +120,22 @@ public class User implements UserDetails {
         return UserDetails.super.isEnabled();
     }
 
-//    public Akses getAkses() {
-//        return akses;
-//    }
-//
-//    public void setAkses(Akses akses) {
-//        this.akses = akses;
-//    }
+    public Akses getAkses() {
+        return akses;
+    }
+
+    public void setAkses(Akses akses) {
+        this.akses = akses;
+    }
+
+
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation(String passwordConfirmation) {
+        this.passwordConfirmation = passwordConfirmation;
+    }
 
     public String getTokenEstafet() {
         return tokenEstafet;

@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -58,6 +59,14 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler {
         LoggingFile.logException("GlobalExceptionHandler","unexpectedRollbackException(UnexpectedRollbackException ex, HttpServletRequest request) ",ex);
         return new ResponseHandler().handleResponse("Kesalahan Input Data , Contoh : Entry Data duplikat",HttpStatus.BAD_REQUEST,null,"X02001",request);
     }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<Object> authorizationDeniedException(AuthorizationDeniedException ex, HttpServletRequest request){
+        LoggingFile.logException("GlobalExceptionHandler","authorizationDeniedException(authorizationDeniedException ex, HttpServletRequest request) ",ex);
+        return new ResponseHandler().handleResponse("AKSES DITOLAK !!",HttpStatus.FORBIDDEN,null,"X03001",request);
+    }
+
+
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> runtimeException(RuntimeException ex, HttpServletRequest request){

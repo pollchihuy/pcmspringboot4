@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,11 +22,13 @@ public class SupplierController {
     SupplierService supplierService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Supplier')")
     public Object save(@Valid @RequestBody ValSupplierDTO valSupplierDTO,
                        HttpServletRequest request){
         return supplierService.save(supplierService.mapToModelMapper(valSupplierDTO),request);
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Supplier')")
     public Object update(
                         @PathVariable Long id,
                         @Valid @RequestBody ValSupplierDTO valSupplierDTO,
@@ -34,6 +37,7 @@ public class SupplierController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Supplier')")
     public Object delete(
             @PathVariable Long id,
             HttpServletRequest request){
@@ -41,6 +45,7 @@ public class SupplierController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('Supplier')")
     public Object findById(
             @PathVariable Long id,
             HttpServletRequest request){
@@ -48,6 +53,7 @@ public class SupplierController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('Supplier')")
     public Object findAll(HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,50, Sort.by("id"));
         return supplierService.findAll(pageable,request);
@@ -59,6 +65,7 @@ public class SupplierController {
      * @return
      */
     @GetMapping("/{sort}/{sort-by}/{page}")
+    @PreAuthorize("hasAuthority('Supplier')")
     public Object findByParam(
             @PathVariable Integer page,
             @PathVariable(value = "sort-by") String sortBy,
@@ -78,6 +85,7 @@ public class SupplierController {
     }
 
     @PostMapping("/upload-excel")
+    @PreAuthorize("hasAuthority('Supplier')")
     public Object uploadExcel(
             @RequestParam MultipartFile file,
             HttpServletRequest request){
@@ -86,6 +94,7 @@ public class SupplierController {
 
 //    http://localhost:8081/supplier/download-excel?column=id&size=2&value=aa
     @GetMapping("/download-excel")
+    @PreAuthorize("hasAuthority('Supplier')")
     public Object downloadExcel(
             @RequestParam String column,
             @RequestParam String value,
@@ -96,6 +105,7 @@ public class SupplierController {
 
     //    http://localhost:8081/supplier/download-pdf?column=id&size=2&value=aa
     @GetMapping("/download-pdf")
+    @PreAuthorize("hasAuthority('Supplier')")
     public Object downloadPDF(
             @RequestParam String column,
             @RequestParam String value,

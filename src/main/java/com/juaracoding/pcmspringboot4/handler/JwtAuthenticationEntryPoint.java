@@ -36,7 +36,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         Map<String,Object> data = new HashMap<>();
         data.put("status",status);
         data.put("success",false);
-        data.put("error-code","X01001");
+        data.put("error_code","X01001");
         data.put("timestamp", Calendar.getInstance().getTime());
 //        data.put("error",authException.getMessage());
         data.put("error",message);
