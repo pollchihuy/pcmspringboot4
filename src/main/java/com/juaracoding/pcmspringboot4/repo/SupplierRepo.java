@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SupplierRepo extends JpaRepository<Supplier, Long> {
 
@@ -15,4 +16,5 @@ public interface SupplierRepo extends JpaRepository<Supplier, Long> {
 
     List<Supplier> findByNamaContainsIgnoreCase(String nama);
     List<Supplier> findByAlamatContainsIgnoreCase(String nama);
+    Optional<Supplier> findTop1ByOrderByIdDesc();
 }

@@ -1,6 +1,7 @@
 package com.juaracoding.pcmspringboot4.controller;
 
 
+import com.juaracoding.pcmspringboot4.config.OtherConfig;
 import com.juaracoding.pcmspringboot4.dto.validasi.ValKategoriProdukDTO;
 import com.juaracoding.pcmspringboot4.service.KategoriProdukService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,7 +65,7 @@ public class KategoriProdukController {
     @GetMapping
     @PreAuthorize("hasAuthority('Kategori-Produk')")
     public Object findAll(HttpServletRequest request){
-        Pageable pageable = PageRequest.of(0,50, Sort.by("id"));
+        Pageable pageable = PageRequest.of(0, OtherConfig.getDefaultPaginationSize(), Sort.by("id"));
         return kategoriProdukService.findAll(pageable,request);
     }
 

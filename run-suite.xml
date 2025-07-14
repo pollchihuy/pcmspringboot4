@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite Semua">
+    <test name="Test-All">
+        <classes>
+            <class name="com.juaracoding.pcmspringboot4.controller.AuthControllerTest"></class>
+            <class name="com.juaracoding.pcmspringboot4.controller.KategoriProdukControllerTest"></class>
+            <class name="com.juaracoding.pcmspringboot4.controller.SupplierControllerTest"></class>
+        </classes>
+    </test>
+</suite>

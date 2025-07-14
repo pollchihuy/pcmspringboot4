@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProdukRepo extends JpaRepository<Produk, Long> {
 
@@ -23,6 +24,7 @@ public interface ProdukRepo extends JpaRepository<Produk, Long> {
     List<Produk> findByModelContainsIgnoreCase(String nama);
     List<Produk> findByWarnaContainsIgnoreCase(String nama);
     List<Produk> findByMerkContainsIgnoreCase(String nama);
+    Optional<Produk> findTop1ByOrderByIdDesc();
 
     @Query(value = "SELECT p FROM Produk p WHERE cast(p.stok as string) LIKE concat('%',?1,'%') ")
     List<Produk> cariStok(String nama);
