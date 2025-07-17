@@ -2,6 +2,7 @@ package com.juaracoding.pcmspringboot4.controller;
 
 
 import com.juaracoding.pcmspringboot4.dto.validasi.ValSupplierDTO;
+import com.juaracoding.pcmspringboot4.model.Supplier;
 import com.juaracoding.pcmspringboot4.service.SupplierService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,12 +15,22 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("supplier")
 public class SupplierController {
 
     @Autowired
     SupplierService supplierService;
+
+    @GetMapping("/miniobject")
+    public Object getData(
+                       HttpServletRequest request){
+        Pageable pageable = PageRequest.of(0,50, Sort.by("id"));
+        List<Supplier> suppliers = (List<Supplier>) supplierService.findAllMiniObject(pageable,request);
+        return suppliers;
+    }
 
     @PostMapping
     @PreAuthorize("hasAuthority('Supplier')")

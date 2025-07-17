@@ -1,9 +1,11 @@
 package com.juaracoding.pcmspringboot4.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "MstSupplier")
@@ -28,6 +30,18 @@ public class Supplier {
     private Date createdAt=new Date();
     @Column(name = "ModifiedAt",insertable = false)
     private Date modifiedAt;
+
+//    @ManyToMany(mappedBy = "suppliers")
+//    @JsonBackReference
+//    private List<Produk> produkList;
+//
+//    public List<Produk> getProdukList() {
+//        return produkList;
+//    }
+//
+//    public void setProdukList(List<Produk> produkList) {
+//        this.produkList = produkList;
+//    }
 
     public Long getId() {
         return id;

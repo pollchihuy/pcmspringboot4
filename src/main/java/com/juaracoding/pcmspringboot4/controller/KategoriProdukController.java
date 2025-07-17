@@ -1,6 +1,5 @@
 package com.juaracoding.pcmspringboot4.controller;
 
-
 import com.juaracoding.pcmspringboot4.config.OtherConfig;
 import com.juaracoding.pcmspringboot4.dto.validasi.ValKategoriProdukDTO;
 import com.juaracoding.pcmspringboot4.service.KategoriProdukService;

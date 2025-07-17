@@ -17,4 +17,11 @@ public interface SupplierRepo extends JpaRepository<Supplier, Long> {
     List<Supplier> findByNamaContainsIgnoreCase(String nama);
     List<Supplier> findByAlamatContainsIgnoreCase(String nama);
     Optional<Supplier> findTop1ByOrderByIdDesc();
+
+//    public List<DealInfo> getDealInfos(List<String> dealIds) {
+//        String queryStr = "SELECT NEW com.admin.entity.DealInfo(deal.url, deal.url, deal.url, deal.url, deal.price, deal.value) " + "FROM Deal AS deal where deal.id in :inclList";
+//        TypedQuery<DealInfo> query = em.createQuery(queryStr, DealInfo.class);
+//        query.setParameter("inclList", dealIds);
+//        return query.getResultList();
+//    }
 }

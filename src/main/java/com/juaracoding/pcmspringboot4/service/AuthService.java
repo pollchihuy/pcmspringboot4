@@ -236,7 +236,7 @@ public class AuthService implements UserDetailsService {
         try {
 
             /** membandingkan password baru dengan konfirmasi password baru yang di entry oleh user*/
-            if(user.getPassword().equals(user.getPasswordConfirmation())) {
+            if(!user.getPassword().equals(user.getPasswordConfirmation())) {
                 return new ResponseHandler().handleResponse("Password Tidak Sama",HttpStatus.BAD_REQUEST,null,
                         "TRN00FV051",request);
             }
@@ -259,7 +259,7 @@ public class AuthService implements UserDetailsService {
             /** Token Estafet tetap di update untuk keamanan, agar token sebelumnya tidak bisa digunakan lagi di proses ini
              */
             userNext.setTokenEstafet(strTokenEstafet);
-            userNext.setPassword(BcryptImpl.hash(user.getPassword()));
+            userNext.setPassword(BcryptImpl.hash(userNext.getUsername()+user.getPassword()));
         }catch (Exception e){
             return new ResponseHandler().handleResponse("Terjadi Kesalahan Pada Server",HttpStatus.INTERNAL_SERVER_ERROR,null,
                     "TRN00FE051",request);

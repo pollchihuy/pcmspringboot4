@@ -343,7 +343,7 @@ public class DataGenerator {
         Integer lengthOfData = random.nextInt(start,end);
         StringBuilder sBuild = new StringBuilder();
         sBuild.setLength(0);
-        for(int i = start; i <= lengthOfData; i++){
+        for(int i = 0; i <= lengthOfData; i++){
             sBuild.append(chLowerCase[random.nextInt(26)]);
         }
         return sBuild.toString();
@@ -353,7 +353,7 @@ public class DataGenerator {
         StringBuilder sBuild = new StringBuilder();
         Integer lengthOfData = random.nextInt(start,end);
         sBuild.setLength(0);
-        for(int i = start; i <= lengthOfData; i++){
+        for(int i = 0; i <= lengthOfData; i++){
             sBuild.append(chUpperCase[random.nextInt(26)]);
         }
         return sBuild.toString();
@@ -364,12 +364,10 @@ public class DataGenerator {
         try{
 
             Integer lengthOfData = random.nextInt(start,end);
-            System.out.println("Start : "+start);
-            System.out.println("End : "+end);
-            System.out.println("Length : "+lengthOfData);
             sBuild.setLength(0);
-            for(int i = start; i <= lengthOfData; i++){
-                sBuild.append(chAlfabet[random.nextInt(0,52)]);
+            /** seharusnya i =0 , bukan i=start */
+            for(int i = 0; i <= lengthOfData; i++){
+                sBuild.append(chAlfabet[random.nextInt(52)]);
             }
         }catch (Exception e){
             System.out.println("Error Generate Data : "+e.getMessage());
@@ -381,7 +379,7 @@ public class DataGenerator {
         StringBuilder sBuild = new StringBuilder();
         Integer lengthOfData = random.nextInt(start,end);
         sBuild.setLength(0);
-        for(int i = start; i <= lengthOfData; i++){
+        for(int i = 0; i <= lengthOfData; i++){
             sBuild.append(chAlfaNumeric[random.nextInt(62)]);
         }
         return sBuild.toString();

@@ -28,5 +28,4 @@ public interface ProdukRepo extends JpaRepository<Produk, Long> {
 
     @Query(value = "SELECT p FROM Produk p WHERE cast(p.stok as string) LIKE concat('%',?1,'%') ")
     List<Produk> cariStok(String nama);
-
 }

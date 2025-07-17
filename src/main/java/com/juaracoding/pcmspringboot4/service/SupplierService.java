@@ -9,6 +9,8 @@ import com.juaracoding.pcmspringboot4.model.LogSupplier;
 import com.juaracoding.pcmspringboot4.repo.SupplierRepo;
 import com.juaracoding.pcmspringboot4.repo.LogSupplierRepo;
 import com.juaracoding.pcmspringboot4.util.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
@@ -52,6 +54,9 @@ public class SupplierService implements IService<Supplier>, IReport<Supplier> {
 
     @Autowired
     private SpringTemplateEngine springTemplateEngine;
+
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private PdfGenerator pdfGenerator;
@@ -138,6 +143,20 @@ public class SupplierService implements IService<Supplier>, IReport<Supplier> {
             return GlobalResponse.internalServerError("TRN02FE031",request);
         }
         return GlobalResponse.dataDitemukan(mapResponse,request);
+    }
+
+    public Object findAllMiniObject(Pageable pageable, HttpServletRequest request) {
+        Page<Supplier> suppliers = supplierRepo.findAll(pageable);
+        List<Supplier> list = suppliers.getContent();
+        List<Long> listDataIN = new ArrayList<>();
+        for (int i = 0; i <4; i++) {
+            listDataIN.add(list.get(i).getId());
+        }
+        String jpqlQuery = "SELECT s FROM Supplier s WHERE s.id IN :param";
+        TypedQuery<Supplier> s = em.createQuery(jpqlQuery, Supplier.class);
+        s.setParameter("param", listDataIN);
+
+        return s.getResultList();
     }
 
     @Override

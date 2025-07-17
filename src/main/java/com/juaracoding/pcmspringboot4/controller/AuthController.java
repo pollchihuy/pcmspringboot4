@@ -1,8 +1,7 @@
 package com.juaracoding.pcmspringboot4.controller;
 
-import com.juaracoding.pcmspringboot4.dto.validasi.LoginDTO;
-import com.juaracoding.pcmspringboot4.dto.validasi.RegisDTO;
-import com.juaracoding.pcmspringboot4.dto.validasi.VerifyRegisDTO;
+import com.juaracoding.pcmspringboot4.dto.validasi.*;
+import com.juaracoding.pcmspringboot4.model.User;
 import com.juaracoding.pcmspringboot4.security.AESGeneratedKey;
 import com.juaracoding.pcmspringboot4.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,4 +46,38 @@ public class AuthController {
     public String tokenExpired(){
         return "Your Key : "+ AESGeneratedKey.getKey();
     }
+
+    @PostMapping("/lupapasswordstepone")
+    public Object lupaPasswordStepOne(@Valid @RequestBody LupaPasswordStepOneDTO lupaPasswordStepOneDTO,
+    HttpServletRequest request){
+
+        User user = new User();
+        user.setEmail(lupaPasswordStepOneDTO.getEmail());
+        return authService.lupaPasswordStepOne(user, request);
+    }
+
+    @PostMapping("/lupapasswordsteptwo")
+    public Object lupaPasswordStepTwo(@Valid @RequestBody LupaPasswordStepTwoDTO lupaPasswordStepTwoDTO,
+                                      HttpServletRequest request){
+
+        User user = new User();
+        user.setEmail(lupaPasswordStepTwoDTO.getEmail());
+        user.setTokenEstafet(lupaPasswordStepTwoDTO.getTokenEstafet());
+        user.setOtp(lupaPasswordStepTwoDTO.getOtp());
+        return authService.lupaPasswordStepTwo(user, request);
+    }
+
+    @PostMapping("/lupapasswordstepthree")
+    public Object lupaPasswordStepThree(@Valid @RequestBody LupaPasswordStepThreeDTO lupaPasswordStepThreeDTO,
+                                      HttpServletRequest request){
+
+        User user = new User();
+        user.setEmail(lupaPasswordStepThreeDTO.getEmail());
+        user.setPassword(lupaPasswordStepThreeDTO.getPassword());
+        user.setPasswordConfirmation(lupaPasswordStepThreeDTO.getPasswordConfirmation());
+        user.setTokenEstafet(lupaPasswordStepThreeDTO.getTokenEstafet());
+        return authService.lupaPasswordStepThree(user, request);
+    }
+
+
 }

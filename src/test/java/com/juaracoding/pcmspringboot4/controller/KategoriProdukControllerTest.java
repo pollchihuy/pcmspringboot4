@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -55,14 +54,9 @@ public class KategoriProdukControllerTest extends AbstractTestNGSpringContextTes
     @Test(priority = 0)
     void save(){
         Response response ;
-//        String strNama =  dataGenerator.genDataAlfabet(15,50);
-//        String strDeskripsi =  dataGenerator.genDataAlfabet(25,255);
-//        String strNotes =  dataGenerator.genDataAlfabet(30,255);
-
-        String strNama =  dataGenerator.dataNamaLengkap();
-        String strDeskripsi =  dataGenerator.dataNamaLengkap()+dataGenerator.dataNamaLengkap();
-        String strNotes =  dataGenerator.dataNamaLengkap()+dataGenerator.dataNamaLengkap();
-
+        String strNama =  dataGenerator.genDataAlfabet(15,50);
+        String strDeskripsi =  dataGenerator.genDataAlfabet(25,255);
+        String strNotes =  dataGenerator.genDataAlfabet(30,255);
         try{
 
             req.put("nama",strNama);
@@ -97,12 +91,9 @@ public class KategoriProdukControllerTest extends AbstractTestNGSpringContextTes
         Response response ;
         req.clear();
         try{
-//            String reqNama = dataGenerator.genDataAlfabet(15,50);
-//            String reqDeskripsi = dataGenerator.genDataAlfabet(20,255);
-//            String reqNotes = dataGenerator.genDataAlfabet(25,255);
-            String reqNama =  dataGenerator.dataNamaLengkap();
-            String reqDeskripsi =  dataGenerator.dataNamaLengkap()+dataGenerator.dataNamaLengkap();
-            String reqNotes =  dataGenerator.dataNamaLengkap()+dataGenerator.dataNamaLengkap();
+            String reqNama = dataGenerator.genDataAlfabet(15,50);
+            String reqDeskripsi = dataGenerator.genDataAlfabet(20,255);
+            String reqNotes = dataGenerator.genDataAlfabet(25,255);
 
             System.out.println("ReqNama : "+reqNama);
             System.out.println("ReqDeskripsi : "+reqDeskripsi);
