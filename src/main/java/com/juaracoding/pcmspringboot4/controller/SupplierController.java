@@ -28,6 +28,7 @@ public class SupplierController {
     public Object getData(
                        HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,50, Sort.by("id"));
+//        List<Supplier> suppliers = (List<Supplier>) supplierService.findAllMiniObject(pageable,request);
         List<Supplier> suppliers = (List<Supplier>) supplierService.findAllMiniObject(pageable,request);
         return suppliers;
     }

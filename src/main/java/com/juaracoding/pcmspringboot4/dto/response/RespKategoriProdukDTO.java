@@ -9,6 +9,16 @@ public class RespKategoriProdukDTO {
 
     private String deskripsi;
 
+    private String notes;
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     public String getDeskripsi() {
         return deskripsi;
     }

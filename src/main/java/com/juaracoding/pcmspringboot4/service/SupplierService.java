@@ -159,6 +159,16 @@ public class SupplierService implements IService<Supplier>, IReport<Supplier> {
         return s.getResultList();
     }
 
+    public Object findAllMiniObjectList(Pageable pageable, HttpServletRequest request) {
+        Page<Supplier> suppliers = supplierRepo.findAll(pageable);
+        List<Supplier> list = suppliers.getContent();
+        List<Long> listDataIN = new ArrayList<>();
+        for (int i = 0; i <5; i++) {
+            listDataIN.add(list.get(i).getId());
+        }
+        return supplierRepo.cariList(listDataIN,pageable);
+    }
+
     @Override
     public ResponseEntity<Object> findById(Long id, HttpServletRequest request) {
         if(id==null){

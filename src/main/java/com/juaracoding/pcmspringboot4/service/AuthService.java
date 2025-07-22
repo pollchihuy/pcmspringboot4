@@ -29,6 +29,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -77,12 +78,29 @@ public class AuthService implements UserDetailsService {
             SendMailOTP.verifyRegisOTP("OTP UNTUK REGISTRASI",
                     user.getNamaLengkap(),user.getEmail(),String.valueOf(otp),"ver_regis.html");
             mapResponse.put("email",user.getEmail());
+            mapResponse.put("id",user.getId());
             Thread.sleep(1000);
         }catch (Exception e){
             LoggingFile.logException("AuthService","regis(User user, HttpServletRequest request)"+ RequestCapture.allRequest(request),e);
             return new ResponseHandler().handleResponse("Server Tidak Dapat Memproses !!",HttpStatus.INTERNAL_SERVER_ERROR,null,"TRN00FE001",request);
         }
         return new ResponseHandler().handleResponse("OTP Terkirim, Cek Email !!",HttpStatus.OK,mapResponse,null,request);
+    }
+
+
+    public ResponseEntity<Object> getImage(Long id,MultipartFile file,HttpServletRequest request){
+
+        try{
+            Optional<User> opUser = userRepo.findById(id);
+            if(opUser.isPresent()){
+                System.out.println("User Tidak Ditemukan");
+            }
+            User usrNext = opUser.get();
+            usrNext.setLinkImage(file.getOriginalFilename());
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return new ResponseHandler().handleResponse("File Berhasil Di Upload",HttpStatus.OK,null,null,request);
     }
 
     /** 011-020 */

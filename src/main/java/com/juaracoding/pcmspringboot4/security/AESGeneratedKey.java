@@ -22,7 +22,7 @@ public class AESGeneratedKey {
             KeyGenerator keyGen = KeyGenerator.getInstance("AES", "BC");
 
             // Atur panjang kunci (misalnya: 128, 192, atau 256 bit)
-            keyGen.init(256);
+            keyGen.init(128);
             // Tampilkan kunci AES
 
             // Generate kunci AES

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,13 +24,13 @@ public class ProdukController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('Produk')")
-    public Object save(@Valid @RequestBody ValProdukDTO valProdukDTO,
-                       HttpServletRequest request){
+    public ResponseEntity<Object> save(@Valid @RequestBody ValProdukDTO valProdukDTO,
+                                       HttpServletRequest request){
         return produkService.save(produkService.mapToModelMapper(valProdukDTO),request);
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('Produk')")
-    public Object update(
+    public ResponseEntity<Object> update(
                         @PathVariable Long id,
                         @Valid @RequestBody ValProdukDTO valProdukDTO,
                         HttpServletRequest request){
@@ -38,7 +39,7 @@ public class ProdukController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('Produk')")
-    public Object delete(
+    public ResponseEntity<Object> delete(
             @PathVariable Long id,
             HttpServletRequest request){
         return produkService.delete(id,request);
@@ -46,7 +47,7 @@ public class ProdukController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('Produk')")
-    public Object findById(
+    public ResponseEntity<Object> findById(
             @PathVariable Long id,
             HttpServletRequest request){
         return produkService.findById(id,request);
@@ -54,14 +55,14 @@ public class ProdukController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('Produk')")
-    public Object findAll(HttpServletRequest request){
+    public ResponseEntity<Object> findAll(HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,50, Sort.by("id"));
         return produkService.findAll(pageable,request);
     }
 
     @GetMapping("/{sort}/{sort-by}/{page}")
     @PreAuthorize("hasAuthority('Produk')")
-    public Object findByParam(
+    public ResponseEntity<Object> findByParam(
             @PathVariable Integer page,
             @PathVariable(value = "sort-by") String sortBy,
             @PathVariable String sort,
@@ -81,7 +82,7 @@ public class ProdukController {
 
     @PostMapping("/upload-excel")
     @PreAuthorize("hasAuthority('Produk')")
-    public Object uploadExcel(
+    public ResponseEntity<Object> uploadExcel(
             @RequestParam MultipartFile file,
             HttpServletRequest request){
         return produkService.uploadExcel(file,request);

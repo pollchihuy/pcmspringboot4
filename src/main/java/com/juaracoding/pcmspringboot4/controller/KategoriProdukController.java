@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,13 +24,13 @@ public class KategoriProdukController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('Kategori-Produk')")
-    public Object save(@Valid @RequestBody ValKategoriProdukDTO valKategoriProdukDTO,
+    public ResponseEntity<Object>  save(@Valid @RequestBody ValKategoriProdukDTO valKategoriProdukDTO,
                        HttpServletRequest request){
         return kategoriProdukService.save(kategoriProdukService.mapToModelMapper(valKategoriProdukDTO),request);
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('Kategori-Produk')")
-    public Object update(
+    public ResponseEntity<Object>  update(
                         @PathVariable Long id,
                         @Valid @RequestBody ValKategoriProdukDTO valKategoriProdukDTO,
                         HttpServletRequest request){
@@ -38,7 +39,7 @@ public class KategoriProdukController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('Kategori-Produk')")
-    public Object delete(
+    public ResponseEntity<Object>  delete(
             @PathVariable Long id,
             HttpServletRequest request){
         return kategoriProdukService.delete(id,request);
@@ -46,7 +47,7 @@ public class KategoriProdukController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('Kategori-Produk')")
-    public Object findById(
+    public ResponseEntity<Object>  findById(
             @PathVariable Long id,
             HttpServletRequest request){
         return kategoriProdukService.findById(id,request);
@@ -54,7 +55,7 @@ public class KategoriProdukController {
 
     @PostMapping("/upload-excel")
     @PreAuthorize("hasAuthority('Kategori-Produk')")
-    public Object uploadExcel(
+    public ResponseEntity<Object>  uploadExcel(
             @RequestParam MultipartFile file,
             HttpServletRequest request){
 //        return kategoriProdukService.uploadExcel(file,request);
@@ -63,7 +64,7 @@ public class KategoriProdukController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('Kategori-Produk')")
-    public Object findAll(HttpServletRequest request){
+    public ResponseEntity<Object>  findAll(HttpServletRequest request){
         Pageable pageable = PageRequest.of(0, OtherConfig.getDefaultPaginationSize(), Sort.by("id"));
         return kategoriProdukService.findAll(pageable,request);
     }
@@ -75,7 +76,7 @@ public class KategoriProdukController {
      */
     @GetMapping("/{sort}/{sort-by}/{page}")
     @PreAuthorize("hasAuthority('Kategori-Produk')")
-    public Object findByParam(
+    public ResponseEntity<Object>  findByParam(
             @PathVariable Integer page,
             @PathVariable(value = "sort-by") String sortBy,
             @PathVariable String sort,

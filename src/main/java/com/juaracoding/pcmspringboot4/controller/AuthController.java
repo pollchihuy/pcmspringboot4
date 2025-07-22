@@ -1,14 +1,17 @@
 package com.juaracoding.pcmspringboot4.controller;
 
 import com.juaracoding.pcmspringboot4.dto.validasi.*;
+import com.juaracoding.pcmspringboot4.handler.ResponseHandler;
 import com.juaracoding.pcmspringboot4.model.User;
 import com.juaracoding.pcmspringboot4.security.AESGeneratedKey;
 import com.juaracoding.pcmspringboot4.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("auth")
@@ -22,6 +25,19 @@ public class AuthController {
 
     ){
         return authService.regis(authService.mapToUser(regisDTO),request);
+
+//        return new ResponseHandler().handleResponse("DATA DITERIMA", HttpStatus.OK,"OK",null,request);
+    }
+
+    @PostMapping("/regis/upload/{id}")
+    public ResponseEntity<Object>  registrationUpload(
+            @PathVariable Long id,
+            @RequestParam MultipartFile file
+            , HttpServletRequest request
+
+    ){
+        return authService.getImage(id,file,request);
+//        return new ResponseHandler().handleResponse("BERHASIL UPLOAD", HttpStatus.OK,"OK",null,request);
     }
 
     @PostMapping("/verify-regis")
