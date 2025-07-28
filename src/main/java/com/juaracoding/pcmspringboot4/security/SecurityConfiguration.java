@@ -54,7 +54,6 @@ public class SecurityConfiguration {
             authorizeHttpRequests(
                     request->request.requestMatchers(
                             "/auth/**",
-                            "/supplier/**",
                             "/contoh/**",
                             "/swagger-ui/**",
                             "/v3/api-docs/**"
