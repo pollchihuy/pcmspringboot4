@@ -1,0 +1,131 @@
+--view all image
+docker images
+
+--pull image from docker hub
+docker pull [image] : version
+
+--check environment
+docker info
+
+--check version
+docker version
+
+--build docker
+docker build --tag [nama_image_custom ex : pcmspring]:[versi_bikin_sendiri ex : 1.0]
+docker build [arahin ke path dockerfile nya] --tag app-golang:1.0 c:\\hue\\spring.jar
+
+--create container
+docker container create --name [buatnama] -p [port-OS]:[port-container]  [image]:version
+
+--create container and run
+docker run --name [buatnama] -p [port-OS]:[port-container]  [image]:version
+
+--start dan stop container
+docker container start [nama_container]
+docker container stop [nama_container]
+
+--view container
+docker container ls --all
+
+--remove container
+docker container rm [namacontainer]
+
+--remove image
+docker image rm [nama_images]:[tag]
+
+--jalankan terminal debugger
+docker container logs [nama_container]
+
+--login ke docker
+docker login
+
+--buat lihat environment / spesifikasi container
+docker container inspect [nama_container]
+
+--untuk menjalankan docker compose
+docker-compose up -d
+docker-compose start (untuk opsi Lebih aman)
+
+docker-compose down
+docker-compose stop (untuk opsi Lebih aman)
+
+--buat defrag seperti bersihkan hard disk (tidak direkomendasikan)
+docker system df
+
+--buat membersihkan file-file yang sudah tidak terpakai
+--nonaktifkan atau delete container agar bisa terhapus
+docker system prune
+docker system prune -a --volumes
+
+contoh
+docker run -d --name pcmspring -p 8085:8080 --env HOST=host.docker.internal --env PORT=1433 --env SVR_PORT=8080 --env DB_UNAME=sa
+--env DB_PWD=04314a220d233becd613f5d70d21dd78 --env SHOW_SQL=true --env DDL_AUTO=update --env DB_SCHEMA=bcafbatch3 springbcafbt3:1.0
+
+-- registry image docker
+0. Masuk ke hub.docker.com
+1. Login dulu
+2. klik menu create repository
+3. isi nama repository sesuai dengan nama image
+4. pilih public / private
+5. create
+6. buat image berdasarkan nama repo nya
+--jika image sudah dibuat maka masukkan command berikut
+docker tag local-image:tagname reponame:tagname
+ex : docker tag springcsr:1.0 pollchihuy/pcmspringboot:1.0
+7. push ke hub.docker.com
+docker push reponame:tagname
+ex : docker push pollchihuy/pcmspringboot:1.0
+
+--view network
+docker network ls
+
+--create network
+docker network create pcm_network
+
+-- untuk menggabungkan container yang satu dengan yang lain seluruh container harus diembed dengan network yang sama
+docker network connect [nama_network] [container]
+ex :
+docker network connect pcm_network springcsr1
+docker network connect pcm_network sqlserver1
+docker network connect pcm_network mysql1
+dari contoh diatas otomatis container springcsr1 , sqlserver1 , mysql1 akan dapat berkomunikasi satu sama lain
+
+perhatikan jika menggunakan network saat melakukan run aplikasi yang akan terhubung ke container database
+buat 1 variabel host dan masukkan value nya dengan nama container nya pada saat dibuat dan port sesuaikan dengan port db nya
+
+docker compose
+urutan nya harus database dulu baru aplikasi di terakhir
+
+contoh compose
+version 3.8
+services :
+    db_sqlserver :
+        container_name : sql_server1
+        image : sqlserver:1.0
+        ports :
+            - 1434:1433
+        networks : pcm_network
+    db_mysql :
+        container_name : mysql1
+        image : mysql:1.0
+        ports :
+            - 3309:3306
+        networks : pcm_network
+    pcmspring :
+        container_name : pcmspring
+        image : springcsr:1.0
+        ports :
+            - 8085:8080
+        networks : pcm_network
+        depends_on :
+            - sql_server1
+            - mysql1
+        environment :
+            - SQL_SERVER_HOST=sql_server1
+            - SQL_SERVER_PORT=1434
+            - MYSQL_HOST=mysql1
+            - MYSQL_PORT=3309
+
+networks :
+    networks_app :
+        name : pcm_network

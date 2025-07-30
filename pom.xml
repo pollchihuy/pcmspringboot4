@@ -199,6 +199,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>paul-rest-api</finalName>
 	</build>
 
 </project>
